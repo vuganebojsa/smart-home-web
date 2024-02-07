@@ -1,0 +1,64 @@
+<div class="row m-5">
+    <div class="col-6">
+        <h3>Filter Past Values</h3>
+        <p>Below you can see luminosity that lamp detected over time</p>
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+            <div class="col-md-4 col-6">
+                <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+        
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row mx-5">
+
+    <div class="col-md-6 col-12">
+        <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" (click)="ChooseTime(0)">Last 6 Hours</button>
+        <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 1, 'report-button': selectedTimePeriod !== 1}" (click)="ChooseTime(1)">Last 12 Hours</button>
+        <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" (click)="ChooseTime(2)">Last 24 Hours</button>
+        <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 3, 'report-button': selectedTimePeriod !== 3}" (click)="ChooseTime(3)">Last Week</button>
+        <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" (click)="ChooseTime(4)">Last Month</button>
+        <canvas id="barChart"></canvas>
+
+    </div>
+    <div class="col-md-6 col-12">
+        <form (ngSubmit)="Submit()">
+            <mat-form-field class="row gx-0">
+                <mat-label>Enter a date range</mat-label>
+                <mat-date-range-input [formGroup]="chosenDateTime" [rangePicker]="picker">
+                    <input matStartDate placeholder="Start date" formControlName="start">
+                    <input matEndDate placeholder="End date" formControlName="end">
+                </mat-date-range-input>
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-date-range-picker #picker></mat-date-range-picker>
+
+                
+            </mat-form-field>
+            
+            <div *ngIf=errorStartDate class="red-dot">
+                
+                You have to enter start date to search.
+            </div>
+            <div *ngIf=errorStartDateTooBig class="red-dot">
+                
+                Your start date can not be after end date.
+            </div>
+            <div *ngIf="errorMessage!=null" class="red-dot">
+                
+                {{errorMessage}}
+            </div>
+            
+            <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+                
+                <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 5, 'report-button': selectedTimePeriod !== 5}" type="submit" >Search</button>
+            </div>
+        </form>
+    </div>
+</div>

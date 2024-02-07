@@ -1,0 +1,29 @@
+.table-container {
+    max-height: 170px; /* Set the desired fixed height */
+    overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.licence-plate-input-container {
+    height: 75px; /* Adjust the height as needed */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.licence-plate-button {
+    position: absolute;
+    bottom: 0;
+}
+.fixed-height-chart {
+    height: 270px; /* Adjust the height as needed */
+}
+
+.small-cell {
+    height: 15px; /* Adjust the height as needed */
+    padding: 4px; /* Adjust the padding as needed */
+    font-size: 15px; /* Adjust the font size as needed */
+}
+.custom-mat-form-field {
+    margin-bottom: 0; 
+  }

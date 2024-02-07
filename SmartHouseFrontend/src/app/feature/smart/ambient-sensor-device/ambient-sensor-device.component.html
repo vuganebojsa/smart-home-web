@@ -1,0 +1,153 @@
+<div class="row m-5 text-center">
+
+  <h2>Data detection for ambient sensor</h2>
+</div>
+<div class="row mt-5 mx-5">
+  <div class="col-6">
+    <h4>Realtime Temperature Values(updated every minute)</h4>
+
+  </div>
+  <div class="col-6">
+    <div class="row d-flex flex-row-reverse">
+      <div class="col-md-4 col-6">
+        <button (click)="goBack()" class="button-style button-font">Go Back</button>
+      </div>
+      <div class="col-md-4 col-6">
+        <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+
+    </div>
+    </div>
+  </div>
+
+</div>
+<div class="row my-2 mx-5">
+  <div class="col-md-6 col-12">
+    <h6>
+      The chart below shows detected temperature in the last hour with values updated every minute.
+    </h6>
+  </div>
+</div>
+<div class="row mb-5 mx-5">
+
+  <div class="col-md-6 col-12">
+    <canvas id="realtimeChart"></canvas>
+  </div>
+
+</div>
+
+<div class="row mx-5">
+  <div class="col-6 mb-2">
+    <h2>Filter Past Temperature Values</h2>
+
+  </div>
+  <h5>Show temperature detection for this sensor in</h5>
+  <div class="col-md-7 col-12 my-2">
+    <button class="mx-1 report-button" (click)="searchByTime(0)">Last 6 Hours</button>
+    <button class="report-button" (click)="searchByTime(1)">Last 12 Hours</button>
+    <button class="mx-1 report-button" (click)="searchByTime(2)">Last 24 Hours</button>
+    <button class="report-button" (click)="searchByTime(3)">Last Week</button>
+    <button class="mx-1 report-button" (click)="searchByTime(4)">Last Month</button>
+    <div>
+      <canvas id="barChart"></canvas>
+
+    </div>
+
+  </div>
+  <div class="col-md-5 col-12 p-3">
+    <h5>Show temperature detection in Time period(not more than a month between dates)</h5>
+    <div class="row">
+      <div class="col-12">
+        <form (ngSubmit)="submit()">
+          <mat-form-field class="row gx-0">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="chosenDateTime" [rangePicker]="picker">
+              <input matStartDate placeholder="Start date" formControlName="start">
+              <input matEndDate placeholder="End date" formControlName="end">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+          <div class="col-12">
+            <div class="alert alert-danger" role="alert" *ngIf="hasError">
+              {{errorValue}}
+            </div>
+          </div>
+          <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+            <button class="report-button" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<div class="row mt-5 mx-5">
+  <div class="col-6">
+    <h4>Realtime Humidity Values(updated every minute)</h4>
+
+  </div>
+</div>
+
+<div class="row my-2 mx-5">
+  <div class="col-md-6 col-12">
+    <h6>
+      The chart below shows detected humidity in the last hour with values updated every minute.
+    </h6>
+  </div>
+</div>
+
+<div class="row mb-5 mx-5">
+  <div class="col-md-6 col-12">
+    <canvas id="realtimeChartHumidity"></canvas>
+  </div>
+</div>
+
+<div class="row mx-5">
+  <div class="col-6 mb-2">
+    <h2>Filter Past Humidity Values</h2>
+
+  </div>
+  <h5>Show humidity detection for this sensor in</h5>
+  <div class="col-md-7 col-12 my-2">
+    <button class="mx-1 report-button" (click)="searchByTimeHumidity(0)">Last 6 Hours</button>
+    <button class="report-button" (click)="searchByTimeHumidity(1)">Last 12 Hours</button>
+    <button class="mx-1 report-button" (click)="searchByTimeHumidity(2)">Last 24 Hours</button>
+    <button class="report-button" (click)="searchByTimeHumidity(3)">Last Week</button>
+    <button class="mx-1 report-button" (click)="searchByTimeHumidity(4)">Last Month</button>
+    <div>
+      <canvas id="barChartHumidity"></canvas>
+
+    </div>
+
+  </div>
+  <div class="col-md-5 col-12 p-3">
+    <h5>Show humidity detection in Time period(not more than a month between dates)</h5>
+    <div class="row">
+      <div class="col-12">
+        <form (ngSubmit)="submitHumidity()">
+          <mat-form-field class="row gx-0">
+            <mat-label>Enter a date range</mat-label>
+            <mat-date-range-input [formGroup]="chosenDateTimeHumidity" [rangePicker]="pickerHumidity">
+              <input matStartDate placeholder="Start date" formControlName="start">
+              <input matEndDate placeholder="End date" formControlName="end">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="pickerHumidity"></mat-datepicker-toggle>
+            <mat-date-range-picker #pickerHumidity></mat-date-range-picker>
+          </mat-form-field>
+          <div class="col-12">
+            <div class="alert alert-danger" role="alert" *ngIf="hasErrorHumidity">
+              {{errorValueHumidity}}
+            </div>
+          </div>
+          <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+            <button class="report-button" type="submit">Submit</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </div>
+</div>

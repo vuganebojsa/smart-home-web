@@ -1,0 +1,62 @@
+<section class="login-section dark-blue-background">
+  <div class="row text-center align-items-center ">
+
+    <div class="col-12 col-md-8 px-5">
+      <div class="row">
+        <div class="col-md-6 col-12 mb-5 mb-md-1">
+          <p class="reesen-big-lead-text join-us center-text text-shadow text-light">Good to see you again</p>
+        </div>
+        <div class="col-md-6 col-12">
+          <img src="../../../../assets/home.png" alt="Car Logo" class="logo-image">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-12 col-md-4 p-5 login-section-input">
+      <form
+        login
+        [formGroup]="loginForm"
+        (ngSubmit)="login()"
+      >
+        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+          Username or password are incorrect. Both fields must be atleast 4 characters long!
+        </div>
+        <div class="mb-3">
+          <label for="email" class="col-form-label dark-blue-color align-text-left">Enter Email or Username
+          </label>
+          <input  type="text" class="form-control" name="email" id="email" placeholder="markoni" formControlName="email">
+          <div *ngIf="loginForm.get('email').hasError('required') && loginForm.get('email').touched" class="red-dot">
+            Email or username is required.
+          </div>
+          <div *ngIf="loginForm.get('email').hasError('minlength') && loginForm.get('email').touched" class="red-dot">
+            Email or username must be at least 5 characters.
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="password" class="col-form-label dark-blue-color align-text-left">Enter Password</label>
+          <input type="password" class="form-control" id="password" name="password" placeholder="Password123" formControlName="password">
+          <div *ngIf="loginForm.get('password').hasError('required') && loginForm.get('password').touched" class="red-dot">
+            Password is required.
+          </div>
+          <div *ngIf="loginForm.get('password').hasError('minlength') && loginForm.get('password').touched" class="red-dot">
+            Password must be at least 6 characters.
+          </div>
+        </div>
+
+
+
+        <div class="mb-3">
+          <button type="submit" class="button-style" id="confirmLogin">Login</button>
+          <h3 class="py-3"><a [routerLink]="['/register']" class="dark-blue-color">New Account? Register now! </a></h3>
+        </div>
+
+      </form>
+
+
+
+    </div>
+  </div>
+</section>
+

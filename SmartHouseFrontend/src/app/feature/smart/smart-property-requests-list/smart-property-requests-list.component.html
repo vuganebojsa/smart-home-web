@@ -1,0 +1,110 @@
+<div class="row text-center">
+    <div class="col-12 mt-5">
+        <h1>Pending properties</h1>
+    </div>
+</div>
+
+<div class="row" *ngIf="isLoaded && this.Properties.length !== 0">
+    <div class="col-md-6 col-12 mt-3 mx-1">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+          <table class="table table-hover table-bordered">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Type</th>
+                  <th scope="col">Address</th>
+                  <th scope="col">City</th>
+                  <th scope="col">Country</th>
+                  <th scope="col">Quadrature</th>
+                  <th scope="col">Number of floors</th>
+                  <th scope="col">User</th>
+                  
+
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let property of Properties;index as i " (click)="showRequest(property)">
+                  <th>{{(this.pagedList.currentPage - 1) * this.pagedList.pageSize + i + 1}}</th>
+                  <td>{{this.property.name}}</td>
+                  <td>{{this.property.typeOfProperty}}</td>
+                  <td>{{this.property.address}}</td>
+                  <td>{{this.property.city}}</td>
+                  <td >{{this.property.country}}</td>
+                  <td >{{this.property.quadrature}}</td>
+                  <td >{{this.property.numberOfFloors}}</td>
+                  <td >{{this.property.userName}}</td>
+                </tr>
+                
+              </tbody>
+            </table>
+            
+        </div>
+        <mat-paginator [length]="pagedList.totalDevices" [pageSize]="pagedList.pageSize"
+    [pageIndex]="pagedList.currentPage - 1" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageChange($event)"
+    aria-label="Select page">
+  </mat-paginator>
+        
+
+    </div>
+      <div class="col-md-5 col-12 p-3" *ngIf="isLoaded && selectedProperty === null && this.Properties.length !== 0">
+        <h3 class="m-5">
+          Please select the property you want to process.
+        </h3>
+      </div>
+    <div class="col-md-5 col-12" *ngIf="selectedProperty != null">
+      <div class="row my-3 mx-2 text-center create-form p-5 dark-border">
+        <div class="col-12">
+          <div class="row text-center mb-3">
+            <div class="col-12">
+              <h2>Manage properties</h2>
+            </div>
+          </div>
+            <form
+            create
+            [formGroup]="requestForm"
+            (ngSubmit)="acceptDecline()"
+            >
+                <div class="form-group">
+                  <label for="id" class="mb-1">Enter property ID</label>
+                  <input type="text" class="form-control mb-2" name="name" id="name" placeholder="1" formControlName="name" [readOnly]="true">
+                  <input type="text" class="form-control mb-2" name="address" id="address" placeholder="1" formControlName="address" [readOnly]="true">
+                  <input type="text" class="form-control mb-4" name="user" id="user" placeholder="1" formControlName="user" [readOnly]="true">
+                </div>
+                <div class="form-group">
+                  <div class="row">
+                    <div class="col-6">
+                      <button type="button"  class="novalite-button " id="Accept" (click)="acceptPressed()">Accept</button>
+                    </div>
+                    <div class="col-6">
+
+                      <button type="button"  class="novalite-button " id="Decline" (click)="declinePressed()">Decline</button>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="form-group" *ngIf="showDeclineReason">
+                  <label for="reason" class="my-3">Enter Reason</label>
+                  <input type="text" class="form-control mb-5" id="reason" formControlName="reason"/>
+              </div>
+                <div class="form-group mt-2">
+                    <button type="submit" class="novalite-button"id="confirmLogin" *ngIf="showDeclineReason">Confirm</button>
+                </div>
+                <div class="form-group mt-2">
+                    <div class="alert alert-danger" role="alert" *ngIf="this.hasError">
+                        {{this.errorMessage}}
+                      </div>
+                </div>
+              </form>
+
+        </div>
+    </div>
+    </div>
+</div>
+<div class="row text-center mx-5 mt-5" *ngIf="!isLoaded || this.Properties.length === 0">
+  <div class="col-md-6 col-12">
+    <h1>
+      No property requests to display
+    </h1>
+  </div>
+</div>

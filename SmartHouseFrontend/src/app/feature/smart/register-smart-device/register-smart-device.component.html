@@ -1,0 +1,48 @@
+<section class="login-section py-5 dark-blue-background">
+    <div class="row d-flex flex-row-reverse">
+        <div class="col-md-3 col-6 mx-1">
+            <button (click)="goBack()" class="novalite-button">Go Back</button>
+        </div>
+    </div>
+    <div class="row text-center align-items-center">
+
+        <div class="col-12 col-md-6 px-5">
+            <img src="../../../../assets/smart-device.png" alt="Car Logo" class="logo-image">
+        </div>
+
+        <div class="col-12 col-md-6 p-5 ">
+
+            <div class="row text-center">
+                <h1 class="reg-lbl text-light">Register Smart Device</h1>
+                <div class="col-12 m-3">
+                    <select (change)="onCategoryChange($event)" class="p-1">
+                        <option value="" disabled selected>Select smart device group</option>
+                        <option value="smartHomeDevices">Smart Home Devices</option>
+                        <option value="outsideSmartDevices">Outside Smart Devices</option>
+                        <option value="electromagneticDevices">Electromagnetic Devices</option>
+                    </select>
+                </div>
+
+                <div *ngIf="selectedCategory" class="col-12 m-3">
+                    <select (change)="onOptionChange($event)" class="p-1">
+                        <option value="" disabled selected>Select smart device type</option>
+                        <option *ngFor="let option of options[selectedCategory]" [value]="option">{{ option }}</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row text-center align-items-center" *ngIf="showRegistration">
+        <div *ngIf="selectedOption === 'Air Conditioner'" class="col-12"><app-register-air-conditioner></app-register-air-conditioner></div>
+        <div *ngIf="selectedOption === 'Ambient Sensor'" class="col-12"><app-register-ambient-sensor></app-register-ambient-sensor></div>
+        <div *ngIf="selectedOption === 'Washing Machine'" class="col-12"><app-register-washing-machine></app-register-washing-machine></div>
+        <div *ngIf="selectedOption === 'Lamp'" class="col-12"><app-register-lamp></app-register-lamp></div>
+        <div *ngIf="selectedOption === 'Vehicle Gate'" class="col-12"><app-register-vehicle-gate></app-register-vehicle-gate></div>
+        <div *ngIf="selectedOption === 'Sprinkler System'" class="col-12"><app-register-sprinkler-system></app-register-sprinkler-system></div>
+        <div *ngIf="selectedOption === 'Electric Vehicle Charger'" class="col-12"><app-register-electric-vehicle-charget></app-register-electric-vehicle-charget></div>
+        <div *ngIf="selectedOption === 'House Battery'" class="col-12"><app-register-house-battery></app-register-house-battery></div>
+        <div *ngIf="selectedOption === 'Solar Panel System'" class="col-12"><app-register-solar-panel-system></app-register-solar-panel-system></div>
+    </div>
+</section>

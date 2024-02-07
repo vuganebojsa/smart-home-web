@@ -1,0 +1,49 @@
+<section class="p-5 dark-blue-background text-light" *ngIf="isLoaded">
+    <div class="row">
+        <div class="col-md-4 col-12">
+            <div class="row text-center">
+                <div class="col-12">
+                    <img id="profilna" [alt]="profile.username" *ngIf="profile.profilePicturePath !== ''">
+                    <img src="../../../../assets/avatar.jpg" [alt]="profile.username" *ngIf="profile.profilePicturePath === ''">
+
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col-12">
+                    <h2>{{profile.name}} {{profile.lastName}}</h2>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8 col-12 p-2">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h1>Information</h1>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 col-6 info-text">Email</div>
+                <div class="col-6 info-text">{{profile.email}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Username</div>
+                <div class="col-6 info-text">{{profile.username}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Role</div>
+                <div class="col-6 info-text">{{getRole(profile.role)}}</div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-6">
+                    <button type="button" class="button-style button-font" id="change password" (click)="changePassword()">Edit Password</button>
+                </div>
+                <div class="col-6">
+                    <button type="button" class="button-style button-font" id="change password" (click)="editProfile()">Edit Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</section>
+<div class="loader" *ngIf="!isLoaded"></div>

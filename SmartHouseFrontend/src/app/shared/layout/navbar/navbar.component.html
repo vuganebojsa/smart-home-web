@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-light dark-blue-background" >
+    <a class="nav-logo" href="#">Smart Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-button" [routerLink]="['login']" *ngIf="!isLoggedIn">Login</a>
+            </li>
+
+            <li class="nav-item active">
+                <a class="nav-button" [routerLink]="['register']" *ngIf="!isLoggedIn">Register</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-button" [routerLink]="['manage/profile']" *ngIf="isLoggedIn">Profile</a>
+            </li>
+          <li class="nav-item">
+            <a class="nav-button" [routerLink]="['manage/register']" *ngIf="isLoggedIn && decodeService.getDecodedAccesToken()['role']==='SUPERADMIN'">Register an admin</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-button" [routerLink]="['smart/properties']" *ngIf="isLoggedIn && (decodeService.getDecodedAccesToken()['role']==='SUPERADMIN' || decodeService.getDecodedAccesToken()['role']==='ADMIN')">Consumption Reports</a>
+          </li>
+          
+
+            <li class="nav-item">
+                <a class="nav-button" id="logout" (click)="logout()" *ngIf="isLoggedIn">Log Out</a>
+            </li>
+
+
+
+          </ul>
+    </div>
+  </nav>

@@ -1,0 +1,85 @@
+<div class="loader" *ngIf="!hasLoaded"></div>
+<div class="row mx-5 mt-3">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+
+            <div class="col-md-4 col-4">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+            <div class="col-md-4 col-4">
+                <button (click)="showReports()" class="button-style button-font">Manage</button>
+            </div>
+
+            <div class="col-md-4 col 4">
+                <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+        
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row info text-center p-3 dark-blue-background text-light mx-4 my-2"
+    *ngIf="this.charger !== null && hasLoaded">
+    <div class="row text-center">
+        <div class="col-md-6 col-12">
+            <div class="row text-center">
+                <div class="col-12">
+                    <!-- <img [src]="base64Image" [alt]="battery.name" *ngIf="battery.pathToImage !== ''"> -->
+                    <img id="profilna" [alt]="charger.name">
+
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col-12">
+                    <h2>{{charger.name}}</h2>
+
+                </div>
+            </div>
+
+
+        </div>
+        <div class="col-md-6 col-12 p-2">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h1>Information</h1>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 col-6 info-text">Status:</div>
+                <div class="col-6 info-text">{{charger.isOnline ? 'Online' : 'Offline'}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">The device is </div>
+                <div class="col-6 info-text">{{charger.isOn ? 'On' : 'Off'}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Number of connections</div>
+                <div class="col-6 info-text">{{charger.numberOfConnections}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Total Power</div>
+                <div class="col-6 info-text">{{charger.power}} KWH</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Max Charge Percentage</div>
+                <div class="col-6 info-text">{{charger.percentageOfCharge}} %</div>
+            </div>
+        </div>
+    </div>
+    <div class="row text-center">
+        <form chargePercentage [formGroup]="chargePercentageForm" (ngSubmit)="setChargePercentage()" class="p-3">
+            <div>
+                <label for="chargePercentage" class="col-form-label text-light">Set Max Charge Percentage in range
+                    50-100 %</label>
+                <input type="number" min="0" class="form-control" name="chargePercentage" id="chargePercentage"
+                    placeholder="100" formControlName="chargePercentage" [min]="50" [max]="100">
+            </div>
+            <div class="mt-3">
+                <button type="submit" class="button-style" id="confirmRegistration">Submit</button>
+            </div>
+        </form>
+    </div>
+</div>

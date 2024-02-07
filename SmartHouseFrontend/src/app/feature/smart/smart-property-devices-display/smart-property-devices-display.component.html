@@ -1,0 +1,70 @@
+<div class="row text-center mx-3">
+  <div class="col-12 my-3">
+    <h1>{{property.name}} Devices</h1>
+  </div>
+</div>
+<div class="row d-flex flex-row-reverse mx-5">
+
+  <button (click)="goBack()" class="register mx-1">Go Back</button>
+  <button (click)="addDevice()" class="register">Add Device</button>
+
+  <button (click)="showConsumption()" class="register mx-1">Energy Consumption</button>
+
+</div>
+<div class="row m-3" *ngIf="isLoaded && this.devices.length !== 0">
+  <div class="col-12">
+    <div class="table-wrapper-scroll-y my-custom-scrollbar">
+      <table class="table table-hover table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Type</th>
+            <th scope="col">Status</th>
+            <th scope="col">Turn On/Off</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="property-row" *ngFor="let device of devices;index as i;trackBy: trackDevices "
+            (click)="showSelectedDevice(device)">
+            <th>{{(this.pagedList.currentPage - 1) * this.pagedList.pageSize + i + 1}}</th>
+            <td>{{this.device.name}}</td>
+            <td>{{getModeEnumValue(device.smartDeviceType)}}</td>
+            <td [ngClass]="{'td-red': !device.isOnline, 'td-green': device.isOnline}">{{this.device.isOnline == true ?
+              'Online' : 'Offline'}}</td>
+            
+            <td *ngIf="this.device.isOnline && this.device.isOn && device.smartDeviceType !== 7 && device.smartDeviceType!==4 && device.smartDeviceType!==8"><button class="register confirmation-button"
+                (click)="turnOnOff(device.id, false); $event.stopPropagation();">Turn Off</button></td>
+            <td *ngIf="this.device.isOnline && !this.device.isOn && device.smartDeviceType !== 7 && device.smartDeviceType!==4 && device.smartDeviceType!==8"><button class="register confirmation-button"
+                (click)="turnOnOff(device.id, true); $event.stopPropagation();">Turn On</button></td>
+
+                <td *ngIf="this.device.isOnline && this.device.isOn && device.smartDeviceType == 4"><button class="register confirmation-button"
+                  (click)="turnOnOff(device.id, false); $event.stopPropagation();">Close gate</button></td>
+              <td *ngIf="this.device.isOnline && !this.device.isOn && device.smartDeviceType == 4"><button class="register confirmation-button"
+                  (click)="turnOnOff(device.id, true); $event.stopPropagation();">Open gate</button></td>
+
+            <td *ngIf="!this.device.isOnline && device.smartDeviceType !== 7 && device.smartDeviceType !== 8">Device is offline</td>
+            <td *ngIf="device.smartDeviceType === 7">Unavailable for battery</td>
+            <td *ngIf="device.smartDeviceType === 8">Unavailable for Vehicle Charger</td>
+
+          </tr>
+
+        </tbody>
+      </table>
+
+    </div>
+    <mat-paginator [length]="pagedList.totalDevices" [pageSize]="pagedList.pageSize"
+    [pageIndex]="pagedList.currentPage - 1" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageChange($event)"
+    aria-label="Select page">
+  </mat-paginator>
+  </div>
+</div>
+<div class="loader" *ngIf="!isLoaded"></div>
+
+<div class="row text-center mt-5 mx-5" *ngIf="isLoaded && this.devices.length === 0">
+  <div class="col-12">
+    <h1>
+      No devices to display
+    </h1>
+  </div>
+</div>

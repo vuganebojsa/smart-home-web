@@ -1,0 +1,6 @@
+.table-wrapper-scroll-y{
+    height: 250px;
+}
+th:hover{
+    cursor: pointer;
+}

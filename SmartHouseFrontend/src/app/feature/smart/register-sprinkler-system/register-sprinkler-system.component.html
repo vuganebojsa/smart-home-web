@@ -1,0 +1,59 @@
+<form
+        login
+        [formGroup]="registerForm"
+        (ngSubmit)="register()"
+        class="p-3"
+      >
+      <h1 class="reg-lbl text-light">Register Sprinkler System</h1>
+
+        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+          {{errorValue}}
+        </div>
+        <div class="mb-3">
+          <label for="name" class="col-form-label text-light">Name of device</label>
+          <input type="text" class="form-control" name="name" id="name" placeholder="Backyard Sprinkler" formControlName="name">
+          <div *ngIf="registerForm.get('name').hasError('required') 
+          && registerForm.get('name').touched" class="red-dot">
+          Name is required.
+          </div>
+          <div *ngIf="registerForm.get('name').hasError('minlength')
+          && registerForm.get('name').touched" class="red-dot">
+           Name should be atleast 3 characters long.
+          </div>
+        </div>
+        <div class="mb-3 text-light mt-2">
+          <label>Select Device Image</label><br>
+      
+          <div class="text-center">
+            <label for="fileInput">
+              <img [src]="base64ImageDisplay" alt="device-image" *ngIf="base64ImageDisplay !== ''"
+                style="width: 70px;height: 70px;border-radius: 50%; cursor: pointer;">
+              <img src="../../../../assets/avatar.jpg" alt="device-image"
+                style="width: 70px;height: 70px;border-radius: 50%; cursor: pointer;" *ngIf="base64ImageDisplay === ''">
+            </label>
+            <input type="file" (change)="onImageSelected($event)" accept="image/*" id="fileInput" style="display: none;">
+          </div>
+        </div>
+        <div class="mb-3 ">
+          <label for="powerSupply" class="col-form-label text-light">Type of power supply</label>
+          <div>
+            <label class="mx-1 text-light">
+              <input type="radio" value="Grid" formControlName="powerSupply"> Grid
+            </label>
+            <label class="mx-1 text-light">
+              <input type="radio" value="Battery" formControlName="powerSupply"> Battery
+            </label>
+          </div>
+         
+          <div *ngIf="registerForm.get('powerSupply').value === 'Grid'">
+            <label for="usage" class="col-form-label text-light">Usage in KWH:</label>
+            <input type="number" min="0" class="form-control" 
+            name="usage" id="usage" placeholder="100" formControlName="usage" [min]="0">
+          </div>
+          
+        </div>
+        <div class="mb-3">
+          <button type="submit" class="button-style" id="confirmRegistration">Register Sprinkler System</button>
+        </div>
+
+    </form>

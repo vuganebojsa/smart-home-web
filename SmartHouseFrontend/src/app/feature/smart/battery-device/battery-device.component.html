@@ -1,0 +1,84 @@
+<div class="row m-5 text-center">
+
+    <h2>Energy Consumption for {{property.name}}</h2>
+</div>
+<div class="row mt-5 mx-5">
+    <div class="col-6">
+        <h4>Realtime Values(updated every minute)</h4>
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="row my-2 mx-5">
+    <div class="col-md-6 col-12">
+        <h6>
+            The chart below shows the energy consumed by the system in the last hour with values updated every minute.
+        </h6>
+    </div>
+</div>
+<div class="row mb-5 mx-5">
+
+    <div class="col-md-6 col-12">
+        <canvas id="realtimeChart"></canvas>
+
+    </div>
+
+</div>
+<div class="row mx-5">
+    <div class="col-6 mb-2">
+        <h2>Filter Past Values</h2>
+
+    </div>
+    <h5>Show energy consumpiton in Whole System in</h5>
+    <div class="col-md-7 col-12 my-2">
+        <button class="mx-1"  [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" (click)="searchByTime(0)">Last 6 Hours</button>
+        <button  [ngClass]="{'selected-button': selectedTimePeriod === 1 , 'report-button': selectedTimePeriod !== 1}" (click)="searchByTime(1)">Last 12 Hours</button>
+        <button class="mx-1" [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" (click)="searchByTime(2)">Last 24 Hours</button>
+        <button  [ngClass]="{'selected-button': selectedTimePeriod === 3, 'report-button': selectedTimePeriod !== 3}" (click)="searchByTime(3)">Last Week</button>
+        <button class="mx-1" [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" (click)="searchByTime(4)">Last Month</button>
+        <div>
+            <canvas id="barChart"></canvas>
+
+        </div>
+
+    </div>
+    
+    <div class="col-md-5 col-12 p-3">
+        <h5>Show energy consumpiton in Time period(not more than a month between dates)</h5>
+        <div class="row">
+            <div class="col-12">
+                <form (ngSubmit)="submit()">
+                    <mat-form-field class="row gx-0">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [formGroup]="chosenDateTime" [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" formControlName="start">
+                            <input matEndDate placeholder="End date" formControlName="end">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+                            {{errorValue}}
+                        </div>
+                    </div>
+                    <div class="col-12" *ngIf="this.dateRangeChart.data.datasets[0].data.length === 0"><h5>
+                        There is no data to show for this date range
+                    </h5></div>
+                    <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+                        <button class="report-button" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>

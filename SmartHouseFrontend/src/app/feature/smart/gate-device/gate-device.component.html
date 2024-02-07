@@ -1,0 +1,262 @@
+<div class="row m-3 mt-2 mb-0">
+    <div class="col-6">
+        <td *ngIf="isPublic && isOnline" class="float-end"><button class="m-1 button-style button-font"
+                (click)="turnPublicPrivate(false); $event.stopPropagation();">Turn Private</button></td>
+        <td *ngIf="!isPublic && isOnline" class="float-end"><button class="m-1 button-style button-font"
+                (click)="turnPublicPrivate(true); $event.stopPropagation();">Turn Public</button></td>
+
+    </div>
+    <div class="col-2">
+        <td *ngIf="isOnline && isOn"><button class="m-1 button-style button-font"
+                (click)="turnOnOff(false); $event.stopPropagation();">Close gate</button></td>
+        <td *ngIf="isOnline && !isOn"><button class="m-1 button-style button-font"
+                (click)="turnOnOff( true); $event.stopPropagation();">Open gate</button></td>
+
+    </div>
+    <div class="col-2">
+        <button (click)="goBack()" class="m-1 button-style button-font ">Go Back</button>
+
+    </div>
+    <div class="col-2">
+        <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+
+    </div>
+
+
+
+    <div class="col-6">
+        <h3>Gate events ({{liveMessage}})</h3>
+    </div>
+
+
+</div>
+
+<div class="row mx-3">
+
+
+    <div class="col-md-6 col-12">
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Licence plate</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let event of visibleEvents; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">{{event.licencePlate}}</td>
+                        <td class="small-cell">
+                            <!-- Use ngIf to conditionally display text based on onOff.isOn -->
+                            <span *ngIf="event.action === 1">Gate opened</span>
+                            <span *ngIf="event.action === 2">Gate closed</span>
+                            <span *ngIf="event.action === 3">Vehicle entered</span>
+                            <span *ngIf="event.action === 4">Vehicle left</span>
+                            <span *ngIf="event.action === 5">Vehicle enter denied</span>
+                        </td>
+                        <td class="small-cell">{{event.timestamp | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <mat-paginator [length]="gateEvents.length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+            (page)="onPageChangeEvent($event)" aria-label="Select page">
+        </mat-paginator>
+
+    </div>
+    <div class="col-md-6 col-12">
+
+
+
+
+        <!-- Add a form for adding a new license plate -->
+        <form [formGroup]="chosenDateTime" (ngSubmit)="Submit()">
+            <div class="col-md-8 col-12">
+                <label for="validPlate" class="label-reg">Choose plate to filter by (optional)</label>
+                <input formControlName="plate" class="form-control" type="text" name="plate" list="plates"
+                    placeholder="licence plate">
+                <div *ngIf="chosenDateTime.get('plate').hasError('minlength') && chosenDateTime.get('plate').touched"
+                    class="red-dot">
+                    <span>Licence plate must have atleast 6 letters if you want to fillter by it.</span>
+                </div>
+
+                <datalist id="plates">
+                    <option *ngFor="let plate of validPlates" [value]="plate">{{ plate }}</option>
+                </datalist>
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-12 col-12">
+                    <mat-form-field class="row gx-0">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" formControlName="start">
+                            <input matEndDate placeholder="End date" formControlName="end">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+
+                    </mat-form-field>
+                    <div *ngIf=errorStartDate class="red-dot">
+                        You have to enter start date to search.
+                    </div>
+                    <div *ngIf=errorStartDateTooBig class="red-dot">
+                        Your start date can not be after the end date.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 col-12 ">
+
+                <button [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" class="report-button m-5 mt-0" type="submit">Search date range</button>
+
+
+            </div>
+
+        </form>
+        <button [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" class="mx-2" (click)="ChooseTime(0)">Last 6 Hours (live)</button>
+        <button [ngClass]="{'selected-button': selectedTimePeriod === 1, 'report-button': selectedTimePeriod !== 1}" class="mx-2" (click)="ChooseTime(1)">Last 12 Hours (live)</button>
+        <button [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" class="mx-2" (click)="ChooseTime(2)">Last 24 Hours (live)</button>
+
+
+
+
+    </div>
+</div>
+
+<div class="row m-3 mb-0">
+    <div class="col-6">
+        <h3>Public/Private changes ({{liveMessage}})</h3>
+
+    </div>
+    <div class="col-6">
+        <h3>Open/Closed changes ({{liveMessage}})</h3>
+    </div>
+
+
+</div>
+<div class="row mx-3">
+    <div class="col-md-6 col-12">
+
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">TimeStamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let publicPrivate of visiblePublicPrivate; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">
+
+                            <span *ngIf="publicPrivate.isPublic === 0">Gate turned private</span>
+                            <span *ngIf="publicPrivate.isPublic === 1">Gate turned public</span>
+                        </td>
+                        <td class="small-cell">{{publicPrivate.timestamp | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <mat-paginator [length]="gatePublicPrivate.length" [pageSize]="pageSizePublicPrivate"
+            [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageChangePublicPrivate($event)" aria-label="Select page">
+        </mat-paginator>
+
+    </div>
+    <div class="col-md-6 col-12">
+
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">TimeStamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let onOff of visibleOnOff; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">
+                            <!-- Use ngIf to conditionally display text based on onOff.isOn -->
+                            <span *ngIf="onOff.isOn === 0">Gate closed</span>
+                            <span *ngIf="onOff.isOn === 1">Gate opened</span>
+                        </td>
+                        <td class="small-cell">{{onOff.timestamp | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <mat-paginator [length]="gateOnOff.length" [pageSize]="pageSizeOnOff" [pageSizeOptions]="[5, 10, 15, 20]"
+            (page)="onPageChangeOnOff($event)" aria-label="Select page">
+        </mat-paginator>
+
+    </div>
+
+    <div class="col-md-12 col-12 mt-5">
+        <h3>Licence plates</h3>
+        <form [formGroup]="newLicencePlateForm" class="d-flex align-items-end" (submit)="addLicencePlate()">
+            <div class="col-md-9 col-12 licence-plate-input-container">
+
+                <label for="newLicencePlate" class="form-label">New Licence Plate</label>
+                <input type="text" placeholder="licence plate" class="form-control" formControlName="licencePlate"
+                    id="newLicencePlate" [(ngModel)]="newLicencePlate" required>
+                <div *ngIf="newLicencePlateForm.get('licencePlate').hasError('required') && newLicencePlateForm.get('licencePlate').touched"
+                    class="red-dot">
+                    Name of licence plate is required.
+                </div>
+                <div *ngIf="newLicencePlateForm.get('licencePlate').hasError('minlength') && newLicencePlateForm.get('licencePlate').touched"
+                    class="red-dot">
+                    Licence plate must have atleast 6 characters.
+                </div>
+                <div *ngIf="error && !newLicencePlateForm.get('licencePlate').hasError('minlength')  && !newLicencePlateForm.get('licencePlate').hasError('required') !"
+                    class="red-dot">
+                    {{errorMessage}}
+                </div>
+
+            </div>
+            <button type="submit" class="mx-2 report-button">Add Licence Plate</button>
+
+        </form>
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let plate of validPlates; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">{{plate}}</td>
+                        <td class="small">
+                            <button class="btn btn-danger" (click)="deleteLicencePlate(plate)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+
+
+    </div>
+
+
+
+</div>

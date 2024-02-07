@@ -1,0 +1,19 @@
+<div *ngIf = "!isLoggedIn" class="home">
+  <div class="row text-center m-5">
+    <div class="col-md-6 col-12">
+      <img src="../../../../assets/home.png" alt="Car Logo" class="logo-image">
+    </div>
+    <div class="col-md-6 col-12 mt-5">
+      <h1 class="mt-5">Smart Home</h1>
+    </div>
+  </div>
+</div>
+<div *ngIf="isLoggedIn && userLogged">
+  <app-smart-property-list></app-smart-property-list>
+</div>
+<div *ngIf="isLoggedIn && (adminLogged || superAdminLogged)">
+  <app-smart-property-requests-list></app-smart-property-requests-list>
+</div>
+
+
+

@@ -1,0 +1,164 @@
+<div class="loader" *ngIf="!hasLoaded"></div>
+<div class="row mx-5 mt-3">
+    <div class="col-6">
+        
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+                
+            </div>
+            <div class="col-md-4 col 4">
+                <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+        
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row info text-center p-3 dark-blue-background text-light mx-4 my-2" *ngIf="this.sps !== null">
+    <div class="row text-center">
+        <div class="col-md-6 col-12">
+            <div class="row text-center">
+                <div class="col-12">
+                    <!-- <img [src]="base64Image" [alt]="battery.name" *ngIf="battery.pathToImage !== ''"> -->
+                    <img id="profilna" [alt]="sps.name">
+
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col-12">
+                    <h2>{{sps.name}}</h2>
+
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6 col-6 info-text">Total Panels </div>
+                    <div class="col-6 info-text">{{sps.panels.length}}</div>
+                </div>
+                <div class="row mt-2" *ngIf="totalPowerGeneratedLastMinute !== 0">
+                    <div class="col-md-6 col-6 info-text">Total KWH produced in last minute</div>
+                    <div class="col-6 info-text">{{totalPowerGeneratedLastMinute}} KWH</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6 col-12 p-2">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h1>Information</h1>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 col-6 info-text">Status:</div>
+                <div class="col-6 info-text">{{sps.isOnline ? 'Online' : 'Offline'}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">The device is </div>
+                <div class="col-6 info-text">{{sps.isOn ? 'On' : 'Off'}}</div>
+            </div>
+            
+            
+            <div class="row mt-2 dark-border mx-2">
+                <div class="col-12 info-text text-center">Panels</div>
+                <div class="col-12 dark-border" *ngFor="let panel of sps.panels">
+                    <div>Size: {{panel.size}} m^2</div>
+                    <div>Efficency: {{panel.efficency}} %</div>
+                </div>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div *ngIf="hasLoaded">
+   
+    <div class="row mx-5 my-1">
+
+        <div class="col-md-8 col-12">
+            <form (ngSubmit)="submit()" [formGroup]="chosenDateTime">
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <h5>Filter table by next options</h5>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+                            {{errorValue}}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <mat-form-field class="col-12">
+                        <mat-label>Date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" formControlName="start">
+                            <input matEndDate placeholder="End date" formControlName="end">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-12">
+                        <input type="text" class="form-control" name="username" id="username"
+                            placeholder="Executer" formControlName="username">
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <button class="report-button" type="submit">Filter</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+    </div>
+
+</div>
+<div class="row mx-5" *ngIf="hasLoaded">
+    <div class="col-8">
+        <p>Below is a table which shows when the solar panel system was turned on and off and by who</p>
+    </div>
+</div>
+<div class="row mx-5 mb-2 pb-2" *ngIf="noData">
+    <h5>No data to display.</h5>
+</div>
+
+<div class="row m-3" *ngIf="hasLoaded && this.values.length !== 0">
+    <div class="col-12">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" (click)="sortColumn('username')">Executer</th>
+              <th scope="col" (click)="sortColumn('timeStamp')">Time of Action</th>
+              <th scope="col" (click)="sortColumn('isOn')">On/Off</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="property-row" *ngFor="let value of displayedValues;index as i; ">
+              <th>{{(this.pagedList.currentPage - 1) * this.pagedList.pageSize + i + 1}}</th>
+              <td >{{this.value.username}}</td>
+              <td >{{ this.value.timeStamp | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td >{{this.value.isOn == true ? 'Device turned On' : 'Device turned off'}} </td>
+              
+            </tr>
+  
+          </tbody>
+        </table>
+  
+      </div>
+      <mat-paginator [length]="pagedList.totalDevices" [pageSize]="pagedList.pageSize"
+      [pageIndex]="pagedList.currentPage - 1" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageChange($event)"
+      aria-label="Select page">
+    </mat-paginator>
+    </div>
+  </div>
+
+<div class="row my-3 mx-5" *ngIf="hasLoaded && this.values.length === 0">
+    <h5>No data to display in selected criteria</h5>
+</div>

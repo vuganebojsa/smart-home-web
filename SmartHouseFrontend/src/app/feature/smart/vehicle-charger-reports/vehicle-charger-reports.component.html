@@ -1,0 +1,145 @@
+<div class="loader" *ngIf="!hasLoaded"></div>
+<div class="row mx-5 mt-3">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+           
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mx-3 my-2 text-center" *ngIf="hasLoaded">
+    <h2>Report management for Electric Vehicle Charger: {{device.name}}</h2>
+</div>
+<div class="row mx-3 my-2">
+    <h5>History of actions performed by users</h5>
+</div>
+<div class="row m-3" *ngIf="hasLoaded && this.values.length !== 0">
+    <div class="col-12">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" (click)="sortColumn('username')">Username of the person who changed the value</th>
+              <th scope="col" (click)="sortColumn('timeStamp')">Time of Action</th>
+              <th scope="col" (click)="sortColumn('value')">Max Charge Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="property-row" *ngFor="let value of displayedValues;index as i; ">
+              <th>{{(this.pagedList.currentPage - 1) * this.pagedList.pageSize + i + 1}}</th>
+              <td >{{this.value.username}}</td>
+              <td >{{ this.value.timeStamp | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td >{{this.value.value}} %</td>
+              
+            </tr>
+  
+          </tbody>
+        </table>
+  
+      </div>
+      <mat-paginator [length]="pagedList.totalDevices" [pageSize]="pagedList.pageSize"
+      [pageIndex]="pagedList.currentPage - 1" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageChange($event)"
+      aria-label="Select page">
+    </mat-paginator>
+    </div>
+  </div>
+
+  <div class="row mx-3 my-2">
+    <div class="col-8">
+        <h5>History of all actions performed on vehicle charger. 
+            It can be filtered by date range and by executer of the action.
+            If no executer is entered it will display every user action and also device actions
+        </h5>
+    </div>
+    
+</div>
+  <div class="row mx-3 my-2">
+
+    <div class="col-md-8 col-12">
+        <form (ngSubmit)="submit()" [formGroup]="chosenDateTime">
+            <div class="row mt-2">
+                <div class="col-12">
+                    <h5>Filter by next options</h5>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" role="alert" *ngIf="hasError">
+                        {{errorValue}}
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+
+                <mat-form-field class="col-12">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [rangePicker]="picker">
+                        <input matStartDate placeholder="Start date" formControlName="start">
+                        <input matEndDate placeholder="End date" formControlName="end">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker></mat-date-range-picker>
+                </mat-form-field>
+            </div>
+            <div class="row mb-3">
+                <div class="col-12">
+                    <input type="text" class="form-control" name="username" id="username"
+                        placeholder="Enter action excecuter" formControlName="username">
+                </div>
+
+            </div>
+            <div class="row">
+                <div class="col-4">
+                    <button class="report-button" type="submit">Filter</button>
+                </div>
+            </div>
+        </form>
+    </div>
+    
+</div>
+
+<div class="row m-3" *ngIf="hasLoaded && this.valuesSecond.length !== 0">
+    <div class="col-12">
+      <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <table class="table table-hover table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col" (click)="sortColumnSecond('executer')">Executer of action</th>
+              <th scope="col" (click)="sortColumnSecond('timeStamp')">Time of Action</th>
+              <th scope="col" (click)="sortColumnSecond('action')">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="property-row" *ngFor="let value of displayedValuesSecond;index as i; ">
+              <th>{{(this.pagedListSecond.currentPage - 1) * this.pagedListSecond.pageSize + i + 1}}</th>
+              <td>{{this.value.executer}}</td>
+              <td>{{ this.value.timeStamp | date:'dd/MM/yyyy HH:mm' }}</td>
+              <td *ngIf="this.value.action === 'Change max Charge Percentage'">Changed max percentage to: {{this.value.value}}</td>
+              <td *ngIf="this.value.action === 'Start Charge'">Vehicle {{this.value.executer}} started charging</td>
+              <td *ngIf="this.value.action === 'End Charge'">Vehicle {{this.value.executer}} stoped charging. KW Used: {{this.value.value | number:'1.2-2'}}</td>
+              
+            </tr>
+  
+          </tbody>
+        </table>
+  
+      </div>
+      <mat-paginator [length]="pagedListSecond.totalDevices" [pageSize]="pagedListSecond.pageSize"
+      [pageIndex]="pagedListSecond.currentPage - 1" [pageSizeOptions]="[5, 10, 15, 20]" (page)="onPageSecondChange($event)"
+      aria-label="Select page">
+    </mat-paginator>
+    </div>
+</div>
+<div class="row mx-3" *ngIf="this.valuesSecond.length === 0">
+    <div class="col-6">
+        <h5>No data to show.</h5>
+    </div>
+</div>

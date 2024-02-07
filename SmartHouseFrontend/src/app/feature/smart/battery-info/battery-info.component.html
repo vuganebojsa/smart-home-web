@@ -1,0 +1,61 @@
+
+<div class="row mx-5 mt-3">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+            <div class="col-md-4 col-6">
+                <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+        
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row info text-center p-3 dark-blue-background text-light mx-4 my-2"
+    *ngIf="isLoaded">
+
+    <div class="row text-center">
+        <div class="col-md-4 col-12">
+            <div class="row text-center">
+                <div class="col-12">
+                    <!-- <img [src]="base64Image" [alt]="battery.name" *ngIf="battery.pathToImage !== ''"> -->
+                    <img id="profilna" [alt]="battery.name" style="width: 250px;height: 250px;">
+
+                </div>
+            </div>
+            <div class="row text-center mt-3">
+                <div class="col-12">
+                    <h2>{{battery.name}}</h2>
+
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-8 col-12 p-2">
+            <div class="row text-center">
+                <div class="col-12">
+                    <h1>Information</h1>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-md-4 col-6 info-text">Status:</div>
+                <div class="col-6 info-text">{{battery.isOnline ? 'Online' : 'Offline'}}</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Battery Size</div>
+                <div class="col-6 info-text">{{battery.batterySize}} KWH</div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-md-4 col-6 info-text">Occupation Level</div>
+                <div class="col-6 info-text">{{battery.occupationLevel}} KWH</div>
+            </div>
+           
+        </div>
+    </div>
+
+</div>

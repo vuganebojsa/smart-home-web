@@ -1,0 +1,82 @@
+<section class="px-5 pt-5 pb-3 dark-blue-background text-light" *ngIf="isLoaded">
+    <div class="row d-flex flex-row-reverse">
+        <div class="col-md-4 col-6">
+            <button (click)="goBack()" class="button-style button-font">Go Back</button>
+        </div>
+    </div>
+
+
+    <form login [formGroup]="editProfileForm" (ngSubmit)="editProfile()" class="p-3">
+        <h1 class="reg-lbl text-light">Edit Profile</h1>
+
+        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+            {{errorValue}}
+        </div>
+        <div class="text-center">
+            <label for="fileInput">
+                <img [src]="base64Image" [alt]="user.username" *ngIf="user.profilePicture !== ''"
+                    style="width: 150px;height: auto; cursor: pointer;">
+                <img src="../../../../assets/avatar.jpg" [alt]="user.username" *ngIf="user.profilePicture === ''"
+                    style="width: 150px;height: auto; cursor: pointer;">
+            </label>
+            <input type="file" (change)="onImageSelected($event)" accept="image/*" id="fileInput"
+                style="display: none;">
+        </div>
+        <div class="mb-3">
+            <label for="name" class="col-form-label text-light">Name</label>
+            <input type="text" class="form-control" name="name" id="name" formControlName="name">
+            <div *ngIf="editProfileForm.get('name').hasError('required') 
+            && editProfileForm.get('name').touched" class="red-dot">
+              Name is required.
+            </div>
+            <div *ngIf="editProfileForm.get('name').hasError('minlength') 
+            && editProfileForm.get('name').touched" class="red-dot">
+              Name should be atleast 3 characters long.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="lastName" class="col-form-label text-light">Last Name</label>
+            <input type="text" class="form-control" name="lastName" id="lastName" formControlName="lastName">
+            <div *ngIf="editProfileForm.get('lastName').hasError('required') 
+            && editProfileForm.get('lastName').touched" class="red-dot">
+              Last Name is required.
+            </div>
+            <div *ngIf="editProfileForm.get('lastName').hasError('minlength') 
+            && editProfileForm.get('lastName').touched" class="red-dot">
+              Last Name should be atleast 3 characters long.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="username" class="col-form-label text-light">Username</label>
+            <input type="text" class="form-control" name="username" id="username" formControlName="username">
+            <div *ngIf="editProfileForm.get('username').hasError('required') 
+            && editProfileForm.get('username').touched" class="red-dot">
+            Username is required.
+            </div>
+            <div *ngIf="editProfileForm.get('username').hasError('minlength') 
+            && editProfileForm.get('username').touched" class="red-dot">
+             Username should be atleast 5 characters long.
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="email" class="col-form-label text-light">Email</label>
+            <input type="text" class="form-control" name="email" id="email" formControlName="email">
+            <div *ngIf="editProfileForm.get('email').hasError('required') 
+            && editProfileForm.get('email').touched" class="red-dot">
+            Email is required.
+            </div>
+            <div *ngIf="editProfileForm.get('email').hasError('minlength') && !editProfileForm.get('email').hasError('email')
+            && editProfileForm.get('email').touched" class="red-dot">
+             Email should be atleast 5 characters long.
+            </div>
+            <div *ngIf="editProfileForm.get('email').hasError('email') && !editProfileForm.get('email').hasError('minLength')
+            && editProfileForm.get('email').touched" class="red-dot">
+             Email not in correct format.
+            </div>
+        </div>
+        <div class="mt-2 text-center">
+            <button type="submit" class="button-style" id="confirmRegistration">Submit</button>
+        </div>
+
+    </form>
+</section>

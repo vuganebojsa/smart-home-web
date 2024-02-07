@@ -1,0 +1,71 @@
+<div class="row d-flex flex-row-reverse mt-5">
+    <div class="col-md-4 col-6">
+        <button (click)="goBack()" class="button-style button-font">Go Back</button>
+    </div>
+</div>
+<div class="col-12 mt-5 mx-5">
+    <h3>Online/Offline info</h3>
+    <div class="row">
+        <div class="col-md-7 col-12">
+            <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" (click)="ChooseTimeOnline(0)">Last 6 Hours</button>
+            <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 1, 'report-button': selectedTimePeriod !== 1}" (click)="ChooseTimeOnline(1)">Last 12 Hours</button>
+            <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" (click)="ChooseTimeOnline(2)">Last 24 Hours</button>
+            <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 3, 'report-button': selectedTimePeriod !== 3}" (click)="ChooseTimeOnline(3)">Last Week</button>
+            <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" (click)="ChooseTimeOnline(4)">Last Month</button>
+            <canvas id="barChartOnline"></canvas>
+
+        </div>
+        <div class="col-md-2 col-12 mx-5">
+            <form (ngSubmit)="SubmitOnlineHistory()">
+                <mat-form-field class="row gx-0">
+                    <mat-label>Enter a date range</mat-label>
+                    <mat-date-range-input [formGroup]="chosenDateTimeOnlineHistory" [rangePicker]="picker2">
+                        <input matStartDate placeholder="Start date" formControlName="startOnlineHistory">
+                        <input matEndDate placeholder="End date" formControlName="endOnlineHistory">
+                    </mat-date-range-input>
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-date-range-picker #picker2></mat-date-range-picker>
+
+
+                </mat-form-field>
+
+                <div *ngIf=errorStartDateOnlineHistory class="red-dot">
+
+                    You have to enter start date to search.
+                </div>
+                <div *ngIf=errorStartDateOnlineHistoryTooBig class="red-dot">
+
+                    Your start date can not be after end date.
+                </div>
+
+                <div *ngIf=errorStartDateOnlineAfterToday class="red-dot">
+
+                    Your start date can not be in future.
+                </div>
+
+                <div *ngIf="errorMessageOnlineHistory!=null" class="red-dot">
+
+                    {{errorMessageOnlineHistory}}
+                </div>
+
+                <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+
+                    <button class="report-button" type="submit" [ngClass]="{'selected-button': selectedTimePeriod === 5, 'report-button': selectedTimePeriod !== 5}" >Search</button>
+                </div>
+            </form>
+            <div>
+                <h5>Total online: <i>{{totalOnline}}min.</i></h5>
+                <h5>Total offline: <i>{{totalOffline}} min.</i></h5>
+                <h5>Percentage online: <i>{{percentageOnline}} %</i></h5>
+                <div>
+                    <canvas id="pieChart"></canvas>
+        
+                </div>
+            </div>
+            
+
+        </div>
+
+        
+    </div>
+</div>

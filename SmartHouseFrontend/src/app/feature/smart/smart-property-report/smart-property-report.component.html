@@ -1,0 +1,94 @@
+
+<div class="row m-3 text-center">
+    <div class="col-12">
+        <h2>Reports for Selected property</h2>
+    </div>
+</div>
+<div class="row mx-5 mt-3">
+    <div class="col-6">
+
+    </div>
+    <div class="col-6">
+        <div class="row d-flex flex-row-reverse">
+           
+            <div class="col-md-4 col-6">
+                <button (click)="goBack()" class="button-style button-font">Go Back</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row mx-5">
+    <div class="col-6 mb-2">
+        <h2>Filter Past Values</h2>
+
+    </div>
+    <h5>Show energy consumed/produced in property in</h5>
+    <div class="col-md-7 col-12">
+        <button class="mx-1"  [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" (click)="searchByTime(0)">Last 6 Hours</button>
+        <button  [ngClass]="{'selected-button': selectedTimePeriod === 1 , 'report-button': selectedTimePeriod !== 1}" (click)="searchByTime(1)">Last 12 Hours</button>
+        <button class="mx-1" [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" (click)="searchByTime(2)">Last 24 Hours</button>
+        <button  [ngClass]="{'selected-button': selectedTimePeriod === 3, 'report-button': selectedTimePeriod !== 3}" (click)="searchByTime(3)">Last Week</button>
+        <button class="mx-1" [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" (click)="searchByTime(4)">Last Month</button>
+        
+    </div>
+    <div class="col-md-5 col-12 p-3">
+        <h5>Show energy consumed/produced in Time period(not more than a month between dates)</h5>
+        <div class="row">
+            <div class="col-12">
+                <form (ngSubmit)="submit()">
+                    <mat-form-field class="row gx-0">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [formGroup]="chosenDateTime" [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" formControlName="start">
+                            <input matEndDate placeholder="End date" formControlName="end">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                    <div class="col-12">
+                        <div class="alert alert-danger" role="alert" *ngIf="hasError">
+                            {{errorValue}}
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-12 wrapper row gx-0 pb-4">
+                        <button class="report-button" type="submit">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<div class="row mx-3">
+    <div class="col-7">
+        <div class="row">
+            <div class="col-12">
+                <h5 >Total KW Consumed by Property</h5>
+                <div>
+                    <canvas id="consumedChart"></canvas>
+        
+                </div>
+               
+            </div>
+            <h5 class="mt-5">Total KW Produced by Property</h5>
+            <div class="col-12">
+                <div>
+                    <canvas id="producedChart"></canvas>
+        
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-5">
+        <h5>Comparison between production and consumption of electric energy</h5>
+        <h6 *ngIf="this.totalProduced === 0">Total produced power is 0 KW</h6>
+        <h6 *ngIf="this.totalConsumed === 0">Total consumed power is 0 KW</h6>
+        <h6 *ngIf="this.totalConsumed === 0 || this.totalProduced === 0">No report to show comparison</h6>
+        <div>
+            <canvas id="pieChart"></canvas>
+
+        </div>
+    </div>
+</div>

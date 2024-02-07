@@ -1,0 +1,201 @@
+<div class="row m-3 mt-2 mb-0">
+    <div class="col-6">
+        <td *ngIf="specialMode && isOnline" class="float-end"><button class="m-1 button-style button-font"
+                (click)="ChangeSpecialMode(false); $event.stopPropagation();">Stop Special Mode</button></td>
+        <td *ngIf="!specialMode && isOnline" class="float-end"><button class="m-1 button-style button-font"
+                (click)="ChangeSpecialMode(true); $event.stopPropagation();">Turn Special Mode</button></td>
+
+    </div>
+    <div class="col-2">
+        <td *ngIf="isOnline && isOn"><button class="m-1 button-style button-font"
+                (click)="turnOnOff(false); $event.stopPropagation();">Turn off</button></td>
+        <td *ngIf="isOnline && !isOn"><button class="m-1 button-style button-font"
+                (click)="turnOnOff( true); $event.stopPropagation();">Turn on</button></td>
+
+    </div>
+    <div class="col-2">
+        <button (click)="goBack()" class="m-1 button-style button-font ">Go Back</button>
+
+    </div>
+    <div class="col-2">
+        <button (click)="showOnlineReport()" class="m-1 button-style button-font ">Show online report</button>
+
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-md-5 col-5 mx-5 mt-5">
+        <h3>Sprinkler special mode days</h3>
+        <p>Below you can choose a days of the week that special mode start and end times will apply to</p>
+        <form [formGroup]="newDayForm" class="d-flex align-items-end" (submit)="addSprinklerDay()">
+            <div class="col-md-9 col-12 licence-plate-input-container">
+
+                <label for="newSprinklerDay" class="form-label">New sprinkler day</label>
+                <select id="day" class="form-control" formControlName="day">
+                    <option *ngFor="let day of availableDays" [value]="day">{{ day }}</option>
+                </select>
+                <div *ngIf="error && !newDayForm.get('day').hasError('minlength')  && !newDayForm.get('day').hasError('required') ! "
+                    class="red-dot">
+                    {{errorMessage}}
+                </div>
+
+            </div>
+            <button type="submit" class="mx-2 report-button">Add new day</button>
+
+        </form>
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let day of activeDays; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">{{day}}</td>
+                        <td class="small">
+                            <button class="btn btn-danger" (click)="deleteSprinklerDay(day)">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-6 col-6 mt-5">
+        <div class="row">
+            <h3>Sprinkler special mode times</h3>
+            <p>Below you can choose start and end time. When special mode is active,
+                 sprinkler will start (end) in chosen time if the today is in special mode days list</p>
+        <div class="col-md-5 col-5 mt-2">
+            
+            <h3>Choose start time</h3>
+            <input placeholder="Time" [ngxTimepicker]="picker1" [format]="24" readonly>
+            <ngx-material-timepicker #picker1 (timeSet)="onTimeSetStart($event)"></ngx-material-timepicker>
+            <div *ngIf="errorMessageStart" class="red-dot">Start time can not be empty</div>
+
+            <div class="margin-left mt-3">
+                <button class="mx-2 report-button" (click)="onSetStartTime()">Set start time</button>
+            </div>
+            <div class="mt-5"> <h5>Start time: <i>{{startTime}}</i></h5></div>
+        </div>
+        <div class="col-md-5 col-5 mt-2">
+            <h3>Choose end time</h3>
+            <input placeholder="Time" [ngxTimepicker]="pickerEnd" [format]="24" readonly>
+            <ngx-material-timepicker #pickerEnd (timeSet)="onTimeSetEnd($event)"></ngx-material-timepicker>
+            <div *ngIf="errorMessageEnd" class="red-dot">End time can not be empty</div>
+
+            <div class="margin-left mt-3">
+                <button class="mx-2 report-button" (click)="onSetEndTime()">Set end time</button>
+            </div>
+            <div class="mt-5"> <h5>End time: <i>{{endTime}}</i></h5></div>
+        </div>
+    </div>
+    </div>
+</div>
+
+<div class="row mt-5">
+
+    <div class="col-md-5 mx-5 col-12">
+        <h3>Sprinkler event history</h3>
+        <div class="table-container mt-3">
+            <table class="table table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">User</th>
+                        <th scope="col">Action</th>
+                        <th scope="col">Value</th>
+                        <th scope="col">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let event of visibleEvents; index as i ">
+                        <td class="small-cell">{{i + 1}}</td>
+                        <td class="small-cell">{{event.username}}</td>
+                        <td class="small-cell">
+                            <!-- Use ngIf to conditionally display text based on onOff.isOn -->
+                            <span *ngIf="event.action == 1">Sprinkler turn on/off changed</span>
+                            <span *ngIf="event.action == 2">Special mode changed</span>
+                            <span *ngIf="event.action == 3">Added sprinkler day</span>
+                            <span *ngIf="event.action == 4">Removed sprinkler day</span>
+                            <span *ngIf="event.action == 5">Sprinkler start time changed</span>
+                            <span *ngIf="event.action == 6">Sprinkler end time changed</span>
+                        </td>
+                        <td class="small-cell">
+                            <span *ngIf="event.action == 2 && event.value == 'True'">Activated</span>
+                            <span *ngIf="event.action == 2 && event.value == 'False'">Deactivated</span>
+                            <span *ngIf="event.action == 1 && event.value == 'True'">Turned on</span>
+                            <span *ngIf="event.action == 1 && event.value == 'False'">Turned off</span>
+                            <span *ngIf="event.action !=1 && event.action !=2">{{event.value}}</span>
+
+                        </td>
+                        <td class="small-cell">{{event.timestamp | date:'dd/MM/yyyy HH:mm:ss'}}</td>
+
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+        <mat-paginator [length]="sprinklerEvents.length" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 15, 20]"
+            (page)="onPageChangeEvent($event)" aria-label="Select page">
+        </mat-paginator>
+
+    </div>
+    <div class="col-md-6 col-12">
+
+
+        <h3>Search by date</h3>
+
+        <!-- Add a form for adding a new license plate -->
+        <form [formGroup]="chosenDateTime" (ngSubmit)="Submit()">
+            <div class="col-md-8 col-12">
+                <label for="username" class="label-reg">Choose username to filter by (optional)</label>
+                <input formControlName="username" class="form-control" type="text" name="username" list="plates"
+                    placeholder="username">
+                
+            </div>
+
+            <div class="row mt-2">
+                <div class="col-md-12 col-12">
+                    <mat-form-field class="row gx-0">
+                        <mat-label>Enter a date range</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate placeholder="Start date" formControlName="start">
+                            <input matEndDate placeholder="End date" formControlName="end">
+                        </mat-date-range-input>
+                        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+
+
+                    </mat-form-field>
+                    <div *ngIf=errorStartDate class="red-dot">
+                        You have to enter start date to search.
+                    </div>
+                    <div *ngIf=errorStartDateTooBig class="red-dot">
+                        Your start date can not be after the end date.
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-sm-12 col-12 ">
+
+                <button class="report-button m-5 mt-0" [ngClass]="{'selected-button': selectedTimePeriod === 4, 'report-button': selectedTimePeriod !== 4}" type="submit">Search date range</button>
+
+
+            </div>
+
+        </form>
+        <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 0, 'report-button': selectedTimePeriod !== 0}" (click)="ChooseTime(0)">Last 6 Hours</button>
+        <button class="report-button" [ngClass]="{'selected-button': selectedTimePeriod === 1, 'report-button': selectedTimePeriod !== 1}" (click)="ChooseTime(1)">Last 12 Hours</button>
+        <button class="mx-1 report-button" [ngClass]="{'selected-button': selectedTimePeriod === 2, 'report-button': selectedTimePeriod !== 2}" (click)="ChooseTime(2)">Last 24 Hours</button>
+
+
+
+    </div>
+</div>
